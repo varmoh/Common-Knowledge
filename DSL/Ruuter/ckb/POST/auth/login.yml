@@ -19,7 +19,7 @@ check_for_required_parameters:
   switch:
     - condition: ${incoming.body.login == null || incoming.body.password == null}
       #next: return_incorrect_request
-     next: logstepAUTH 
+      next: logstepAUTH 
   next: extract_request_data
 logstepAUTH:
   log: ${incoming.body}
