@@ -53,7 +53,10 @@ get_session_length:
     query:
       key: "session_length"
   result: session_result
-  next: check_session_length_result
+  #next: check_session_length_result
+
+logstepSESSION:
+  log: ${session_result.response}
 
 check_session_length_result:
   switch:
