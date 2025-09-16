@@ -39,11 +39,14 @@ jobs:
 
       - name: Build and push service images
         run: |
-          SERVICES=("file-processing" "data-export" "search-service" "scrapper-server" "scheduler" "cleaning-server" "GUI")
-
+          #SERVICES=("file-processing" "data-export" "search-service" "scrapper-server" "scheduler" "cleaning-server" "GUI")
+          SERVICES=("GUI")
           for SERVICE in "${SERVICES[@]}"; do
             echo "🔨 Building service: $SERVICE"
             cd $SERVICE || cd scrapper
+            ls -al
+            pwd
+            #docker build -t $IMAGE_NAME:${SERVICE}-${TAG_VERSION} .
             docker build -t $IMAGE_NAME:${SERVICE}-${TAG_VERSION} .
             cd ..
             docker push $IMAGE_NAME:${SERVICE}-${TAG_VERSION}
