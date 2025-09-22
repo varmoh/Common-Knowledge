@@ -33,8 +33,8 @@ jobs:
       - name: Set repo
         run: |
            LOWER_CASE_GITHUB_REPOSITORY=$(echo $GITHUB_REPOSITORY | tr '[:upper:]' '[:lower:]')
-           echo "DOCKER_TAG_CUSTOM=ghcr.io/${LOWER_CASE_GITHUB_REPOSITORY}:server-$RELEASE-$VERSION.$BUILD.$FIX" >> $GITHUB_ENV
-           echo "DOCKER_TAG_CELERY=ghcr.io/${LOWER_CASE_GITHUB_REPOSITORY}:celery-$RELEASE-$VERSION.$BUILD.$FIX" >> $GITHUB_ENV
+           echo "DOCKER_TAG_CUSTOM=ghcr.io/${LOWER_CASE_GITHUB_REPOSITORY}:fileproc-$RELEASE-$VERSION.$BUILD.$FIX" >> $GITHUB_ENV
+           
            echo "$GITHUB_ENV"
       - name: Docker Build server
         run: | 
