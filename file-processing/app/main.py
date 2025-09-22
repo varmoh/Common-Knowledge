@@ -23,7 +23,7 @@ async def cleanup_background_task():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logging.basicConfig(
-        level=logging.INFO,
+        level=logging.DEBUG,
         format="%(levelname)s - %(asctime)s - %(name)s - %(message)s",
         handlers=[logging.StreamHandler(sys.stdout), logging.FileHandler("app.log")],
     )
