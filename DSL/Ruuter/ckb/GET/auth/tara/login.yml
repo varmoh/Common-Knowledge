@@ -1,11 +1,11 @@
 declaration:
   call: declare
   version: 0.1
-  description: "Decription placeholder for 'LOGIN'"
-  method: get
+  description: "Decription placeholder for 'Tara-Login'"
+  method: post
   accepts: json
   returns: json
-  namespace: backoffice
+  namespace: centops
   allowlist:
     header:
       - field: cookie
@@ -22,23 +22,14 @@ get_tara_user_info:
    plaintext: 
       "JWTTOKEN"
   result: tara_info
-  next: get_session_length
-
-get_session_length:
-  call: http.post
-  args:
-    url: "[#CKB_RESQL]/get-configuration"
-    body:
-      key: "session_length"
-  result: session_result
   next: getUser
 
 getUser:
   call: http.post
   args:
-    url: "[#CKB_USERS_RESQL]/get-user-with-roles-by-id-code"
+    url: "[#CKB_RESQL_USERS]/get-user-by-id-code"
     body:
-      userIdCode: ${tara_info.response.body.personalCode}
+      idCode: ${tara_info.response.body.personalCode}
   result: user_info
   next: checkIfUserExists
 
@@ -51,7 +42,16 @@ checkIfUserExists:
 assignUser:
   assign:
     user: ${user_info.response.body[0]}
-  next: generate_cookie  
+  next: get_session_length
+
+get_session_length:
+  call: http.post
+  args:
+    url: "[#CKB_RESQL_USERS]/get-configuration"
+    body:
+      key: "session_length"
+  result: session_result
+  next: generate_cookie
 
 generate_cookie:
   call: http.post
@@ -66,8 +66,6 @@ generate_cookie:
         "displayName": "${user.displayName}",
         "firstName": "${user.firstName}",
         "lastName": "${user.lastName}",
-        "csaEmail": "${user.csaEmail}",
-        "csaTitle": "${user.csaTitle}",
         "authorities": "${user.authorities}",
         "authMethod": "${tara_info.response.body.authMethod}",
         "fullName": "${tara_info.response.body.fullName}"
@@ -83,20 +81,7 @@ assign_cookie:
       Secure: true
       HttpOnly: true
       SameSite: "[#COOKIE_SAME_SITE]"
-  next: setCustomerSupportAgentAway
-
-setCustomerSupportAgentAway:
-  call: http.post
-  args:
-    url: "[#CKB_RESQL]/set-customer-support-status"
-    body:
-      active: false
-      userIdCode: ${tara_info.response.body.personalCode}
-      created: ${new Date().toISOString()}
-      status: "offline"
-      statusComment: ""
-  result: setCustomerSupportAgentAwayResult
-  next: return_value  
+  next: return_value    
 
 return_value:
   headers:
