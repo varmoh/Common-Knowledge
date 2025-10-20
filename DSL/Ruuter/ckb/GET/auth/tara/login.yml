@@ -15,7 +15,7 @@ declaration:
 get_tara_user_info:
   call: http.get
   args:
-   url: "[#CHATBOT_TIM]/jwt/userinfo"
+   url: "[#CKB_TIM]/jwt/userinfo"
    contentType: plaintext
    headers:
     cookie: ${incoming.headers.cookie}
@@ -27,7 +27,7 @@ get_tara_user_info:
 get_session_length:
   call: http.post
   args:
-    url: "[#CHATBOT_RESQL]/get-configuration"
+    url: "[#CKB_RESQL]/get-configuration"
     body:
       key: "session_length"
   result: session_result
@@ -36,7 +36,7 @@ get_session_length:
 getUser:
   call: http.post
   args:
-    url: "[#CHATBOT_RESQL]/get-user-with-roles-by-id-code"
+    url: "[#CKB_USERS_RESQL]/get-user-with-roles-by-id-code"
     body:
       userIdCode: ${tara_info.response.body.personalCode}
   result: user_info
@@ -56,7 +56,7 @@ assignUser:
 generate_cookie:
   call: http.post
   args:
-    url: "[#CHATBOT_TIM]/jwt/custom-jwt-generate"
+    url: "[#CKB_TIM]/jwt/custom-jwt-generate"
     body:
       JWTName: "customJwtCookie"
       expirationInMinutes: ${session_result.response.body[0]?.value ?? '120'}
@@ -88,7 +88,7 @@ assign_cookie:
 setCustomerSupportAgentAway:
   call: http.post
   args:
-    url: "[#CHATBOT_RESQL]/set-customer-support-status"
+    url: "[#CKB_RESQL]/set-customer-support-status"
     body:
       active: false
       userIdCode: ${tara_info.response.body.personalCode}
